@@ -1,7 +1,7 @@
 name: vu_parser
 description: "Parser for Vilnius University site (tvarkarasciai.vu.lt)."
 version: 0.0.1
-homepage:
+homepage: "https://github.com/dpointtt/vu_parser"
 
 environment:
   sdk: ^3.12.2
