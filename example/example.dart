@@ -1,33 +1,27 @@
-import 'package:vu_parser/src/client/vu_client.dart';
-import 'package:vu_parser/src/models/study_type.dart';
-import 'package:vu_parser/src/parsing/program_selector_parser.dart';
-import 'package:vu_parser/src/parsing/schedule_parser.dart';
+import 'package:vu_parser/vu_parser.dart';
 
 Future<void> main() async {
-  // try {
-  //   final response =
-  //   await client.fetchScheduleForDate(params, DateTime(2026, 9, 7));
-  //   final schedule = ScheduleParser.parse(response);
-  //   schedule.forEach(print);
-  // } finally {
-  //   client.close();
-  // }
-
   final client = VUClient();
 
-  final programsResponse = await client.fetchPrograms(StudyType.bakalauro);
-  final programs = ProgramSelectorParser.parseSelectablePrograms(programsResponse);
-  final coursesResponse = await client.fetchCourses(StudyType.bakalauro, programs[17].value!);
-  final courses = ProgramSelectorParser.parseSelectableCourses(coursesResponse);
-  final groupsResponse = await client.fetchGroups(StudyType.bakalauro, programs[17].value!, courses[0].number!);
-  final groups = ProgramSelectorParser.parseGroups(groupsResponse);
+  try {
+    // 1. Get selectable study programs for a given study type
+    final programsResponse = await client.fetchPrograms(StudyType.bakalauro);
+    final programs = ProgramSelectorParser.parseSelectablePrograms(programsResponse);
 
-  groups.forEach(print);
+    // 2. Get selectable courses (years) for a chosen program
+    final coursesResponse = await client.fetchCourses(StudyType.bakalauro, programs[17].value!);
+    final courses = ProgramSelectorParser.parseSelectableCourses(coursesResponse);
 
-  final scheduleResponse = await client.fetchScheduleForDate(groups[2], DateTime(2026, 9, 7));
-  final events = ScheduleParser.parse(scheduleResponse);
+    // 3. Get study groups for a chosen course
+    final groupsResponse = await client.fetchGroups(StudyType.bakalauro, programs[17].value!, courses[0].number!);
+    final groups = ProgramSelectorParser.parseGroups(groupsResponse);
 
-  events.forEach(print);
+    // 4. Fetch and parse the schedule for a specific group and date
+    final scheduleResponse = await client.fetchScheduleForDate(groups[2], DateTime(2026, 9, 7));
+    final events = ScheduleParser.parse(scheduleResponse);
 
-  client.close();
+    events.forEach(print);
+  } finally {
+    client.close();
+  }
 }
