@@ -1,5 +1,7 @@
 # vu_parser
 
+## ⚠️ Deprecated, due to TSPD being added to Vilnius University Servers.
+
 A Dart/Flutter package for fetching and parsing data from the [Vilnius University site](https://tvarkarasciai.vu.lt) (`tvarkarasciai.vu.lt`).
 
 It wraps the site's internal AJAX endpoints and HTML responses, exposing them as typed Dart models — study types, programs, courses, groups, and schedule events — so you can build your own schedule app (e.g. Flutter) without scraping HTML by hand.
